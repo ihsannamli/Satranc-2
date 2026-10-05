@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Satranç 2</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♟</text></svg>">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chessboard-js/1.0.0/chessboard-1.0.0.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <div class="main-content">
+            <div class="board-area" id="boardArea">
+                <div id="board"></div>
+                <div class="card-deck-slot" id="cardDeckSlot" title="Kart çek">
+                    <div class="deck-back"></div>
+                    <div class="deck-count" id="deckCount">0</div>
+                </div>
+            </div>
+            <div id="info">
+                <div id="status"></div>
+        <aside class="side-panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <h2>Oyun Paneli</h2>
+                    <span class="mode-badge" id="modeBadge" hidden></span>
+                </div>
+                <div class="panel-actions">
+                    <button type="button" id="saveGameBtn" class="chip-btn" title="Bu maçı arşive kaydet">Kaydet</button>
+                    <button type="button" id="archiveBtn" class="chip-btn" title="Kayıtlı maçlar">
+                        Maçlar <span class="badge" id="archiveCount">0</span>
+                    </button>
+                </div>
+
+            </div>
+
+            <div class="hand-section" id="handSection" hidden>
+                <h3>Elindeki Kartlar</h3>
+                <div class="hand-cards-wrapper">
+                    <div class="hand-cards" id="handCards"></div>
+                    <div class="draw-hint" id="drawHint" hidden>Kart yuvasına tıkla veya boşluk tuşuna basarak kart çek</div>
+                </div>
+                <p class="hand-hint" id="handHint"></p>
+            </div>
+
+            <div class="opening-section">
+                <div class="opening-name muted" id="openingName">Henüz açılış yok</div>
+            </div>
+
+            <div class="navigation-section">
+                <button id="prevMoveBtn" class="nav-btn" title="Önceki hamle" disabled>
+                    <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+                <button id="analyzeBtn" class="analyze-btn" title="Maçı motorla incele" hidden>Maçı İncele</button>
+                <button id="nextMoveBtn" class="nav-btn" title="Sonraki hamle" disabled>
+                    <svg class="icon-next" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                    <svg class="icon-return" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="11 18 5 12 11 6"></polyline>
+                        <polyline points="5 12 19 12"></polyline>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="review-panel" id="reviewPanel" hidden></div>
+
+            <div class="history-section">
+                <div class="history-header">
+                    <h3>Hamle Kayıt Defteri</h3>
+                    <button id="clearHistoryBtn" class="clear-btn" title="Oyunu sıfırla">&#10005;</button>
+                </div>
+                <div class="history-list" id="historyList">
+                    <div class="history-empty">Henüz hamle yok</div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <footer class="site-footer">
+        <span class="footer-credit">Powered By Stockfish</span>
+        <span class="footer-dot" aria-hidden="true">&middot;</span>
+        <span class="footer-credit">Made By &#304;hsan Naml&#305; &amp; Space Bunny</span>
+    </footer>
+
+    <div class="mode-overlay" id="modeOverlay">
+        <div class="mode-dialog" role="dialog" aria-modal="true" aria-label="Oyun modu se&ccedil;">
+            <div class="mode-head">
+                <h1 class="mode-title">Satranç 2</h1>
+                <p class="mode-sub">Oynamak istediğin modu seç</p>
+            </div>
+            <div class="mode-cards">
+                <button type="button" class="mode-card mode-card-primary" data-mode="rough">
+                    <span class="mode-card-top">
+                        <span class="mode-card-name">Rough Like</span>
+                        <span class="mode-card-tag">3 Kart</span>
+                    </span>
+                    <span class="mode-card-desc">Desteden 3 kart çekilir, 2'sini seçersin. Kart bedavadır, sıranı bitirmez.</span>
+                </button>
+                <button type="button" class="mode-card" data-mode="classic">
+                    <span class="mode-card-top">
+                        <span class="mode-card-name">Klasik</span>
+                        <span class="mode-card-tag">Oyna</span>
+                    </span>
+                    <span class="mode-card-desc">Kurallar olduğu gibi. 800 – 2880 ELO arası Stockfish.</span>
+                </button>
+            </div>
+            <p class="mode-hint">Klasik için <kbd>Enter</kbd></p>
+        </div>
+    </div>
+
+    <div class="draft-overlay" id="draftOverlay" hidden>
+        <div class="draft-dialog" role="dialog" aria-modal="true" aria-label="Kart secimi">
+            <div class="draft-head">
+                <h2>Başlangıç Kartlarını Seç</h2>
+                <p class="draft-count"><strong id="draftCount">0</strong> / <span id="draftPickCount">2</span> seçildi</p>
+            </div>
+            <div class="draft-cards" id="draftCards"></div>
+            <div class="draft-foot">
+                <p class="draft-hint" id="draftHint">Kartlara tıklayarak çevir ve seç. Seçilen kartlar oyun boyunca elinde kalır.</p>
+                <button type="button" id="draftConfirm" disabled>Maça Başla</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="archive-overlay" id="archiveOverlay" hidden>
+        <div class="archive-dialog" role="dialog" aria-modal="true" aria-label="Kayıtlı maçlar">
+            <div class="archive-dialog-head">
+                <h2>Kayıtlı Maçlar</h2>
+                <button type="button" id="archiveClose" class="clear-btn" title="Kapat">&times;</button>
+            </div>
+            <div class="archive-list" id="archiveList"></div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chessboard-js/1.0.0/chessboard-1.0.0.min.js"></script>
+    <script src="cards.js"></script>
+    <script src="openings.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
