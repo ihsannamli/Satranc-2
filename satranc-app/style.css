@@ -1106,6 +1106,25 @@ button.secondary:hover { background: #cfcfcf; }
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.28);
 }
 .card-face svg { display: block; width: 100%; height: 100%; }
+.card-asset {
+  position: absolute;
+  inset: 0;
+  background-image: url('assests/Kartlar.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-radius: inherit;
+}
+.card-asset-back {
+  background-position: 8% 50%;
+}
+.card-asset-front {
+  background-position: var(--card-asset-x, 50%) var(--card-asset-y, 50%);
+}
+.card[data-id="pawn-rook"] { --card-asset-x: 22%; --card-asset-y: 48%; }
+.card[data-id="pawn-queen"] { --card-asset-x: 38%; --card-asset-y: 48%; }
+.card[data-id="bishop-knight"] { --card-asset-x: 56%; --card-asset-y: 48%; }
+.card[data-id="rook-bishop"] { --card-asset-x: 72%; --card-asset-y: 48%; }
+.card[data-id="color-flip"] { --card-asset-x: 88%; --card-asset-y: 48%; }
 
 .card-front {
   transform: rotateY(180deg);
@@ -1302,6 +1321,7 @@ button.secondary:hover { background: #cfcfcf; }
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.7) inset;
   pointer-events: none;
   z-index: 4;
+}
 
 /* ---------------------------------------------------------------------
    Kart Yuvası ve Animasyonlar

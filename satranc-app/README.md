@@ -45,8 +45,9 @@ Rough Like modunda oyuncu el başında **desteden 3 kart çeker ve 2'sini seçer
 Her kart **tek kereliktir** ve **bedavadır**: kart oynandıktan sonra aynı sıra
 içinde normal hamle de oynanır, kart sırayı bitirmez.
 
-Kart tanımları `cards.js`, görselleri de aynı dosyada SVG olarak üretilir
-(ayrı resim dosyası yoktur; hepsi `crispEdges` ile kare piksel).
+Kart tanımları `cards.js` içindedir; kart yüzleri `assests/Kartlar.jpg`
+asset'inden çizilir. Asset yüklenemezse kodda tutulan SVG fallback'i devreye
+alınabilir.
 
 ### Uygulanan kartlar
 
