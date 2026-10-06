@@ -1786,6 +1786,12 @@ function clearHand() {
 let drawAnimationsQueue = []  // bekleyen çekme animasyonları
 let isDrawingCard = false     // animasyon devam ediyor mu
 
+function bindEventById(id, eventName, handler) {
+    const el = document.getElementById(id)
+    if (el) el.addEventListener(eventName, handler)
+    return el
+}
+
 // Kart yuvası pozisyonunu al
 function getDeckSlotRect() {
     const slot = document.getElementById('cardDeckSlot')
@@ -2106,29 +2112,31 @@ window.onload = function () {
     stockfishEngine.postMessage('isready')
     stockfishEngine.postMessage('setoption name Skill Level value ' + eloToSettings(engineElo).skill)
 
-    document.getElementById('resetBtn').addEventListener('click', resetGame)
-    document.getElementById('flipBtn').addEventListener('click', flipBoard)
-    document.getElementById('prevMoveBtn').addEventListener('click', goToPrevMove)
-    document.getElementById('nextMoveBtn').addEventListener('click', goToNextMove)
+    bindEventById('resetBtn', 'click', resetGame)
+    bindEventById('flipBtn', 'click', flipBoard)
+    bindEventById('prevMoveBtn', 'click', goToPrevMove)
+    bindEventById('nextMoveBtn', 'click', goToNextMove)
     // Defter oyunun kendisidir; temizlemek tahtayı da sıfırlar.
-    document.getElementById('clearHistoryBtn').addEventListener('click', resetGame)
-    document.getElementById('analyzeBtn').addEventListener('click', startGameReview)
-    document.getElementById('saveGameBtn').addEventListener('click', saveGame)
-    document.getElementById('archiveBtn').addEventListener('click', openArchive)
-    document.getElementById('archiveClose').addEventListener('click', closeArchive)
-    document.getElementById('archiveOverlay').addEventListener('click', function (e) {
+    bindEventById('clearHistoryBtn', 'click', resetGame)
+    bindEventById('analyzeBtn', 'click', startGameReview)
+    bindEventById('saveGameBtn', 'click', saveGame)
+    bindEventById('archiveBtn', 'click', openArchive)
+    bindEventById('archiveClose', 'click', closeArchive)
+    const archiveOverlay = bindEventById('archiveOverlay', 'click', function (e) {
         if (e.target === this) closeArchive()
     })
     document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') closeArchive()
+        if (e.key === 'Escape' && archiveOverlay && !archiveOverlay.hidden) closeArchive()
     })
     window.addEventListener('resize', handleResize)
 
-    eloSlider.addEventListener('input', function (e) {
-        const val = Math.round(parseInt(e.target.value, 10) / 50) * 50
-        eloSlider.value = val
-        updateEloDisplay(val)
-    })
+    if (eloSlider) {
+        eloSlider.addEventListener('input', function (e) {
+            const val = Math.round(parseInt(e.target.value, 10) / 50) * 50
+            eloSlider.value = val
+            updateEloDisplay(val)
+        })
+    }
 
     document.querySelectorAll('.elo-preset').forEach(function (btn) {
         btn.addEventListener('click', function () {

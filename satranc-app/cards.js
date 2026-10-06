@@ -279,3 +279,21 @@ const CARD_DECK = [
 const DRAFT_DEAL = 5
 const DRAFT_PICK = 2
 
+const legacyCardBack = cardBack
+const legacyCardArt = cardArt
+const CARD_ASSET_URL = 'assests/Kartlar.jpg'
+
+function cardAssetFace(side, id) {
+    const cls = side === 'back' ? 'card-asset card-asset-back' : 'card-asset card-asset-front'
+    return '<div class="' + cls + '" data-card-id="' + (id || '') + '"' +
+        ' style="background-image:url(\'' + CARD_ASSET_URL + '\')"></div>'
+}
+
+function cardBack() {
+    return cardAssetFace('back')
+}
+
+function cardArt(id) {
+    if (!id) return legacyCardArt(id)
+    return cardAssetFace('front', id)
+}
